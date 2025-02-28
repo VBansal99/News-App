@@ -11,12 +11,13 @@ import kotlinx.coroutines.launch
 class NewsViewModel : ViewModel() {
     private val _newsText = MutableStateFlow("Loading...")
     val newsText: StateFlow<String> = _newsText
+    val apiKey=BuildConfig.API_KEY
 
     fun fetchNews(query: String) {
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 val response =
-                    RetrofitInstance.api.getNews(query, "fa591f3e50ef47f08a4e65a6401bd642")
+                    RetrofitInstance.api.getNews(query, apiKey)
                 val articles = response.articles
                 _newsText.value = articles.joinToString("\n") { it.title }
         } catch (e: Exception) {
