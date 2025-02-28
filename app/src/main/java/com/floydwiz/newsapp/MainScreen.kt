@@ -1,8 +1,10 @@
 package com.floydwiz.newsapp
 
 import android.annotation.SuppressLint
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.layout.wrapContentHeight
@@ -36,7 +38,6 @@ fun MainScreen() {
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.onPrimary,
                     titleContentColor = MaterialTheme.colorScheme.primary,
-
                     ),
                 title = { Text("Top News", color = Color.Black, fontWeight = FontWeight.Bold) },
                 modifier =
@@ -45,8 +46,10 @@ fun MainScreen() {
         },
         bottomBar = { BottomBarNavigation(navController = navController) },
         modifier = Modifier.windowInsetsPadding(WindowInsets.systemBars)
-    ) {
-        SetupNavGraph(navHostController = navController)
+    ) {innerPadding ->
+        Box(modifier = Modifier.padding(innerPadding)) {
+            SetupNavGraph(navHostController = navController)
+        }
     }
 }
 
@@ -94,44 +97,3 @@ fun BottomBarNavigation(navController: NavHostController) {
 
     }
 }
-
-//@Composable
-//fun BottomBar(navController: NavHostController) {
-//    val screens = listOf(Screen.Home, Screen.Search, Screen.Saved)
-//    val navBackStackEntry by navController.currentBackStackEntryAsState()
-//    val currentDestination = navBackStackEntry?.destination
-//
-//    BottomNavigation(
-//        backgroundColor = MaterialTheme.colorScheme.onPrimary,
-//        contentColor = MaterialTheme.colorScheme.onBackground
-//    ) {
-//
-//        screens.forEach { screen ->
-//            AddItem(
-//                screen = screen,
-//                currentDestination = currentDestination,
-//                navHostController = navController
-//            )
-//        }
-//    }
-//}
-//
-//@Composable
-//fun RowScope.AddItem(
-//    screen: Screen,
-//    currentDestination: NavDestination?,
-//    navHostController: NavHostController
-//) {
-//    if (currentDestination != null) {
-//        BottomNavigationItem(
-//            label = { Text(text = screen.title) },
-//            icon = { Icon(imageVector = screen.icon, contentDescription = "Navigation Icon") },
-//            selected = currentDestination.hierarchy.any {
-//                it.route == screen.route
-//            },
-//            onClick = {
-//                navHostController.navigate(screen.route)
-//            }
-//        )
-//    }
-//}
