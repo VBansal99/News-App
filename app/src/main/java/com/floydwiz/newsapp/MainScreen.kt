@@ -31,7 +31,6 @@ import androidx.navigation.compose.rememberNavController
 @Composable
 fun MainScreen() {
     val navController = rememberNavController()
-
     Scaffold(
         topBar = {
             androidx.compose.material3.TopAppBar(

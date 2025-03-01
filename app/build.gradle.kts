@@ -81,6 +81,9 @@ dependencies {
     implementation (libs.converter.gson)
     //Coil
     implementation(libs.coil.compose)
+    implementation(libs.androidx.material3.v130beta04)
+
+
 
 
 }
