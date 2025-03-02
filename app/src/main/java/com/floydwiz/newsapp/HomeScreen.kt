@@ -101,7 +101,10 @@ private fun NewsItem(articles: Articles, navController: NavController) {
             val encodedTitle = Uri.encode(articles.title)
             val encodedImage = Uri.encode(articles.urlToImage)
             val encodedDescription = Uri.encode(articles.description)
-            navController.navigate(route = "detail_screen?title=$encodedTitle&image=$encodedImage&description=$encodedDescription")
+            val encodedContent = Uri.encode(articles.content)
+            val encodedAuthor = Uri.parse(articles.author)
+            val encodedPublishedAt = Uri.parse(articles.publishedAt)
+            navController.navigate(route = "detail_screen?title=$encodedTitle&image=$encodedImage&description=$encodedDescription&content=$encodedContent&publishedAt=$encodedPublishedAt&author=$encodedAuthor")
         },
         colors = CardDefaults.cardColors(Color.White),
         elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)

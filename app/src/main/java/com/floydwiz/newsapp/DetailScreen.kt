@@ -15,12 +15,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.BaselineShift
-import androidx.compose.ui.text.style.LineHeightStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -29,7 +25,14 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 
 @Composable
-fun DetailScreen(title: String, image: String, description:String) {
+fun DetailScreen(
+    title: String,
+    image: String,
+    description: String,
+    content: String,
+    author: String,
+    publishedAt: String
+) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -39,6 +42,12 @@ fun DetailScreen(title: String, image: String, description:String) {
         LoadTitle(title)
         Divider(modifier = Modifier.fillMaxWidth())
         LoadDescription(description)
+        Divider(modifier = Modifier.fillMaxWidth())
+        LoadContent(content)
+        Divider(modifier = Modifier.fillMaxWidth())
+        LoadPublishedAt(publishedAt)
+        Divider(modifier = Modifier.fillMaxWidth())
+        LoadAuthor(author)
     }
 }
 
@@ -74,14 +83,57 @@ private fun LoadTitle(loadTitle: String) {
 }
 
 @Composable
-fun LoadDescription(text: String) {
+private fun LoadDescription(loadDescription: String) {
+    val filteredContent = loadDescription.replace(Regex("\\[.*?]"), "")
     Text(
-        text = text,
+        text = filteredContent,
         fontSize = 16.sp,
         fontFamily = FontFamily.SansSerif,
         letterSpacing = 0.5.sp,
         lineHeight = 18.sp,
-        maxLines = 10,
+        overflow = TextOverflow.Ellipsis,
+        textAlign = TextAlign.Justify,
+        modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+    )
+}
+
+@Composable
+private fun LoadContent(loadContent: String) {
+    val filteredContent = loadContent.replace(Regex("\\[.*?]"), "")
+    Text(
+        text = filteredContent,
+        fontSize = 16.sp,
+        fontFamily = FontFamily.SansSerif,
+        letterSpacing = 0.5.sp,
+        lineHeight = 18.sp,
+        overflow = TextOverflow.Ellipsis,
+        textAlign = TextAlign.Justify,
+        modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+    )
+}
+
+@Composable
+private fun LoadPublishedAt(loadPublishedAt:String) {
+    Text(
+        text = "PublishedAt: $loadPublishedAt",
+        fontSize = 16.sp,
+        fontFamily = FontFamily.SansSerif,
+        letterSpacing = 0.5.sp,
+        lineHeight = 18.sp,
+        overflow = TextOverflow.Ellipsis,
+        textAlign = TextAlign.Justify,
+        modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+    )
+}
+
+@Composable
+private fun LoadAuthor(loadAuthor: String) {
+    Text(
+        text = "Author: $loadAuthor",
+        fontSize = 16.sp,
+        fontFamily = FontFamily.SansSerif,
+        letterSpacing = 0.5.sp,
+        lineHeight = 18.sp,
         overflow = TextOverflow.Ellipsis,
         textAlign = TextAlign.Justify,
         modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
