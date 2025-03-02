@@ -20,14 +20,17 @@ fun SetupNavGraph(navHostController: NavHostController) {
             NewsFavouriteScreen()
         }
         composable(
-            route = "detail_screen?title={title}&image={image}",
+            route = "detail_screen?title={title}&image={image}&description={description}",
             arguments = listOf(
                 navArgument("title") { type = NavType.StringType;defaultValue="No title" },
-                navArgument("image") { type = NavType.StringType;defaultValue="" })
+                navArgument("image") { type = NavType.StringType;defaultValue="" },
+                navArgument("description"){type = NavType.StringType;defaultValue = "No Description"}
+            )
         ) { backStackEntry ->
             val title = backStackEntry.arguments?.getString("title") ?: "No Title"
             val image = backStackEntry.arguments?.getString("image") ?: ""
-            DetailScreen(title = title, image = image)
+            val description =backStackEntry.arguments?.getString("description") ?:"No Description"
+            DetailScreen(title = title, image = image, description = description)
         }
     }
 }

@@ -1,6 +1,7 @@
 package com.floydwiz.newsapp
 
 import android.net.Uri
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -44,7 +45,12 @@ fun NewsHomeScreen(viewModel: NewsViewModel = viewModel(), navController: NavCon
     LaunchedEffect(Unit) {
         viewModel.fetchNews()
     }
-    PullDownToReload(articles, viewModel, navController)
+    val dataIsNotRefreshed = false
+    if (!dataIsNotRefreshed) {
+        PullDownToReload(articles, viewModel, navController)
+    } else {
+        ListNews(articles, navController)
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -69,6 +75,7 @@ fun PullDownToReload(
     )
     {
         ListNews(articles, navController)
+        Log.d("News Data", articles.toString())
     }
 }
 
@@ -93,7 +100,8 @@ private fun NewsItem(articles: Articles, navController: NavController) {
         modifier = Modifier.padding(8.dp), onClick = {
             val encodedTitle = Uri.encode(articles.title)
             val encodedImage = Uri.encode(articles.urlToImage)
-            navController.navigate(route = "detail_screen?title=$encodedTitle&image=$encodedImage")
+            val encodedDescription = Uri.encode(articles.description)
+            navController.navigate(route = "detail_screen?title=$encodedTitle&image=$encodedImage&description=$encodedDescription")
         },
         colors = CardDefaults.cardColors(Color.White),
         elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
