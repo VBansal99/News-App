@@ -1,8 +1,7 @@
 package com.floydwiz.newsapp
 
-import android.annotation.SuppressLint
+import android.net.Uri
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -13,7 +12,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
@@ -25,14 +23,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
-import androidx.compose.ui.input.nestedscroll.NestedScrollSource
-import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontStyle
@@ -51,46 +44,57 @@ fun NewsHomeScreen(viewModel: NewsViewModel = viewModel(), navController: NavCon
     LaunchedEffect(Unit) {
         viewModel.fetchNews()
     }
-    PullDownToReload(articles, viewModel)
+    PullDownToReload(articles, viewModel, navController)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PullDownToReload(articles: List<Articles>, viewModel: NewsViewModel) {
+fun PullDownToReload(
+    articles: List<Articles>,
+    viewModel: NewsViewModel,
+    navController: NavController
+) {
     val coroutineScope = rememberCoroutineScope()
     var isRefreshing by remember { mutableStateOf(false) }
-    PullToRefreshBox(isRefreshing = isRefreshing,
-        onRefresh = {coroutineScope.launch {
-            isRefreshing = true
-            viewModel.fetchNews()
-            delay(3000)
-            isRefreshing = false
-        }
-        },)
+    PullToRefreshBox(
+        isRefreshing = isRefreshing,
+        onRefresh = {
+            coroutineScope.launch {
+                isRefreshing = true
+                viewModel.fetchNews()
+                delay(3000)
+                isRefreshing = false
+            }
+        },
+    )
     {
-        ListNews(articles)
+        ListNews(articles, navController)
     }
 }
 
 
 @Composable
-private fun ListNews(articles: List<Articles>) {
+private fun ListNews(articles: List<Articles>, navController: NavController) {
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
             .background(Color.White)
     ) {
         items(articles) { article ->
-            NewsItem(article)
+            NewsItem(article, navController = navController)
         }
     }
 }
 
 @Composable
-private fun NewsItem(articles: Articles) {
+private fun NewsItem(articles: Articles, navController: NavController) {
     Card(
         shape = RoundedCornerShape(10.dp),
-        modifier = Modifier.padding(8.dp),
+        modifier = Modifier.padding(8.dp), onClick = {
+            val encodedTitle = Uri.encode(articles.title)
+            val encodedImage = Uri.encode(articles.urlToImage)
+            navController.navigate(route = "detail_screen?title=$encodedTitle&image=$encodedImage")
+        },
         colors = CardDefaults.cardColors(Color.White),
         elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
     ) {

@@ -15,3 +15,7 @@ sealed class Screen(val route: String, val title: String, val icon: ImageVector)
         icon = Icons.Default.Favorite
     )
 }
+
+sealed class Screen2(val route: String) {
+    object Detail : Screen2(route = "detail_screen")
+}
