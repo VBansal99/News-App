@@ -19,6 +19,9 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
@@ -31,21 +34,37 @@ import androidx.navigation.compose.rememberNavController
 @Composable
 fun MainScreen() {
     val navController = rememberNavController()
+
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentScreenTitle = when (navBackStackEntry?.destination?.route) {
+        Screen.Home.route -> "Top News"
+        Screen.Search.route -> "Search News"
+        Screen.Saved.route -> "Saved News"
+        else -> "Top News"
+    }
+
     Scaffold(
         topBar = {
             androidx.compose.material3.TopAppBar(
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.onPrimary,
                     titleContentColor = MaterialTheme.colorScheme.primary,
-                    ),
-                title = { Text("Top News", color = Color.Black, fontWeight = FontWeight.Bold) },
-                modifier =
-                Modifier.windowInsetsPadding(WindowInsets.systemBars)
+                ),
+                title = {
+                    Text(
+                        text = currentScreenTitle,
+                        color = Color.Black,
+                        fontWeight = FontWeight.Bold
+                    )
+                },
+                modifier = Modifier.windowInsetsPadding(WindowInsets.systemBars)
             )
         },
-        bottomBar = { BottomBarNavigation(navController = navController) },
+        bottomBar = {
+            BottomBarNavigation(navController = navController)
+        },
         modifier = Modifier.windowInsetsPadding(WindowInsets.systemBars)
-    ) {innerPadding ->
+    ) { innerPadding ->
         Box(modifier = Modifier.padding(innerPadding)) {
             SetupNavGraph(navHostController = navController)
         }
@@ -86,13 +105,11 @@ fun BottomBarNavigation(navController: NavHostController) {
                         tint = Color.Black
                     )
                 },
-                //label = { Text(text = screen.title, color = Color.Black) },
                 colors = NavigationBarItemDefaults.colors(
                     selectedIconColor = Color.White,
                     unselectedIconColor = Color.LightGray
                 )
             )
         }
-
     }
 }
